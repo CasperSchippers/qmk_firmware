@@ -51,23 +51,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [FN1] = LAYOUT_69_ansi(
         KC_GRV,  KC_F1,    KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,    KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,   KC_F12,   KC_DEL,           RGB_TOG,
-        _______, BT_HST1,  BT_HST2,  BT_HST3, P2P4G,   _______, KC_PGUP,  KC_HOME, KC_UP,   KC_END,  _______,  _______,  _______,  _______,          KC_INS,
-        KC_LCTL, _______,  _______,  _______, _______, _______,           KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT,  _______,  _______,  _______,          KC_END,
-        KC_LSFT,           _______,  _______, _______, _______, _______,  _______, _______, _______, _______,  _______,  _______,  _______, KC_PGUP,
-        KC_LCTL, KC_LWIN,  KC_LALT,           _______,          _______,  _______,          _______,           KC_RALT,            _______, KC_PGDN, _______),
+        _______, BT_HST1,  BT_HST2,  BT_HST3, P2P4G,   XXXXXXX, KC_PGUP,  KC_HOME, KC_UP,   KC_END,  KC_DEL,   XXXXXXX,  XXXXXXX,  XXXXXXX,          KC_INS,
+        _______, KC_CAPS,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,           KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT,  KC_BSPC,  XXXXXXX,  _______,          KC_END,
+        _______,           XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  _______, KC_PGUP,
+        _______, _______,  _______,           _______,          _______,  _______,          _______,           _______,            XXXXXXX, KC_PGDN, XXXXXXX),
 
     [FN2] = LAYOUT_69_ansi(
-        _______, _______,  _______,  _______, _______, _______, _______,  _______, _______, _______, _______,  _______,  _______,  _______,          _______,
-        _______, _______,  _______,  _______, _______, _______, _______,  _______, _______, _______, _______,  _______,  _______,  _______,          _______,
-        _______, _______,  _______,  _______, _______, _______,           _______, _______, _______, _______,  _______,  _______,  _______,          _______,
-        _______,           _______,  _______, _______, _______, BAT_LVL,  BAT_LVL, _______, _______, _______,  _______,  _______,  _______, _______,
-        _______, _______,  _______,           _______,          _______,  _______,          _______,           _______,            _______, _______, _______),
+        _______, XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_P7,   KC_P8,   KC_P9,   KC_P0,    KC_PMNS,  KC_PPLS,  _______,          _______,
+        _______, XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_P6,   KC_P7,   KC_P6,   XXXXXXX,  KC_PSLS,  KC_PAST,  XXXXXXX,          _______,
+        _______, XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,           XXXXXXX, KC_P1,   KC_P2,   KC_P3,    XXXXXXX,  XXXXXXX,  _______,          _______,
+        _______,           XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, KC_PCMM,  KC_PDOT,  XXXXXXX,  _______, _______,
+        _______, _______,  _______,           _______,          _______,  _______,          KC_P0,             _______,            _______, _______, _______),
 
     [FN3] = LAYOUT_69_ansi(
         _______, _______,  _______,  _______, _______, _______, _______,  _______, _______, _______, _______,  _______,  _______,  _______,          _______,
         _______, _______,  _______,  _______, _______, _______, _______,  _______, _______, _______, _______,  _______,  _______,  _______,          _______,
         _______, _______,  _______,  _______, _______, _______,           _______, _______, _______, _______,  _______,  _______,  _______,          _______,
-        _______,           _______,  _______, _______, _______, _______,  _______, _______, _______, _______,  _______,  _______,  _______, _______,
+        _______,           _______,  _______, _______, _______, BAT_LVL,  BAT_LVL, _______, _______, _______,  _______,  _______,  _______, _______,
         _______, _______,  _______,           _______,          _______,  _______,          _______,           _______,            _______, _______, _______),
 
 };
@@ -89,4 +89,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
     return true;
+}
+
+void keyboard_post_init_user(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(HSV_OFF);
+}
+
+
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (host_keyboard_led_state().caps_lock) {
+        for (uint8_t i = led_min; i < led_max; i++) {
+            if (g_led_config.flags[i] & LED_FLAG_KEYLIGHT) {
+                rgb_matrix_set_color(i, RGB_RED);
+            }
+        }
+    }
+    return false;
 }

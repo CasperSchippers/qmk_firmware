@@ -16,6 +16,8 @@
 
 #pragma once
 
+#define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
+
 #ifdef RGB_MATRIX_ENABLE
 /* RGB Matrix driver configuration */
 #    define DRIVER_COUNT 2
@@ -53,5 +55,7 @@
 
 #    define RGB_MATRIX_KEYPRESSES
 #    define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+
+#define ENABLE_RGB_MATRIX_ALPHAS_MODS
 
 #endif
