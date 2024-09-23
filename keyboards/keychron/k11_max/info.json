@@ -11,13 +11,15 @@
     "features": {
         "bootmagic": true,
         "extrakey": true,
-        "mousekey": true,
+        // "mousekey": true,
         "dip_switch": true,
         "encoder": true,
         "encoder_map": true,
         "nkro": true,
         "raw": true,
-        "sendstring": true
+        "sendstring": true,
+        "caps_word": true,
+        // "console": true,
     },
     "matrix_pins": {
         "cols": ["C6", "C7", "C8", "A14", "A15", "C10", "C11", "C13", "C14", "C15", "C0", "C1", "C2", "C3", "A0", "A1"],

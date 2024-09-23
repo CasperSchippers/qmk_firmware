@@ -98,12 +98,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    HSV hsv = {0, 255, 255};
+    HSV hsv = (HSV){HSV_OFF};
 
     if (layer_state_is(FN1)) {
         hsv = (HSV){HSV_CYAN};
-    } else {
-        hsv = (HSV){HSV_OFF};
+    } else if (layer_state_is(FN2)) {
+        hsv = (HSV){HSV_RED};
     }
 
     if (hsv.v > rgb_matrix_get_val()) {
@@ -111,19 +111,18 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
     RGB rgb = hsv_to_rgb(hsv);
 
-    if (host_keyboard_led_state().caps_lock) {
-        rgb_matrix_set_color(29, RGB_WHITE);
-    }
-
     for (uint8_t i = led_min; i < led_max; i++) {
         if (HAS_FLAGS(g_led_config.flags[i], 0x04)) { // 0x01 == LED_FLAG_MODIFIER
-            if (layer_state_is(FN1)) {
-                rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
-            } else if () {
-
-            }
+            rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
         }
     }
+
+    if (host_keyboard_led_state().caps_lock) {
+        rgb_matrix_set_color(29, RGB_CYAN);
+    }
+
+    rgb_matrix_set_color(0, RGB_WHITE);
+
     return false;
 }
 
