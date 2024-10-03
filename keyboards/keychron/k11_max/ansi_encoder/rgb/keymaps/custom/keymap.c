@@ -16,6 +16,7 @@
 
 #include "action_layer.h"
 #include "color.h"
+#include "keycodes.h"
 #include QMK_KEYBOARD_H
 #include "keychron_common.h"
 
@@ -44,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,     KC_W,     KC_E,    KC_R,    KC_T,    KC_Y,     KC_U,    KC_I,    KC_O,    KC_P,     KC_LBRC,  KC_RBRC,  KC_BSLS,          KC_DEL,
         KC_LCTL, KC_A,     KC_S,     KC_D,    KC_F,    KC_G,              KC_H,    KC_J,    KC_K,    KC_L,     KC_SCLN,  KC_QUOT,  KC_ENT,           KC_HOME,
         KC_LSFT,           KC_Z,     KC_X,    KC_C,    KC_V,    KC_B,     MO(FN2), KC_N,    KC_M,    KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT, KC_UP,
-        KC_LCTL, KC_LWIN,  KC_LALT,           MO(FN1),          MO(FN2),     MO(FN1),       KC_SPC,            KC_RALT,            KC_LEFT, KC_DOWN, KC_RGHT),
+        KC_LCTL, KC_LWIN,  KC_LALT,           MO(FN1),          MO(FN2),     MO(FN1),       KC_SPC,            KC_RCTL,            KC_LEFT, KC_DOWN, KC_RGHT),
 
     [WIN_FN1] = LAYOUT_69_ansi(
         KC_GRV,  KC_BRID,  KC_BRIU,  KC_TASK, KC_FILE, RGB_VAD, RGB_VAI,  KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,          RGB_TOG,
@@ -87,12 +88,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     };
 #endif // ENCODER_MAP_ENABLE
 
+
+
+bool alt_down = false;
+bool alttab_fnlayer = false;
+
 // clang-format on
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
     if (!process_record_keychron_common(keycode, record)) {
         return false;
     }
+
+
+    switch (keycode) {
+    case KC_LALT:
+        alt_down = record->event.pressed;
+        uprintf("alt pressed: %u", alt_down);
+        if (alttab_fnlayer && !record->event.pressed) {
+            uprintf("Detriggering");
+            layer_off(FN1);
+            alttab_fnlayer = false;
+        }
+        break;
+    case KC_TAB:
+        uprintf("tab pressed: %u", record->event.pressed);
+        if (alt_down && !record->event.pressed) {
+            uprintf("Triggering");
+            alttab_fnlayer = true;
+            layer_on(FN1);
+        }
+        break;
+    }
+
+
+
+
     return true;
 }
 
