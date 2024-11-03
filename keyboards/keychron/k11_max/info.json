@@ -19,6 +19,7 @@
         "raw": true,
         "sendstring": true,
         "caps_word": true,
+        "tap_dance": true,
         // "console": true,
     },
     "matrix_pins": {

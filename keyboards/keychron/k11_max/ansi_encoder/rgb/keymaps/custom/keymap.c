@@ -30,6 +30,15 @@ enum layers{
     FN2,
     FN3,
 };
+
+enum {
+    TD_RCTL,
+};
+
+tap_dance_action_t tap_dance_actions[] = {
+    // Tap once for Escape, twice for Caps Lock
+    [TD_RCTL] = ACTION_TAP_DANCE_DOUBLE(KC_RCTL, KC_RALT),
+};
     
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -45,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,     KC_W,     KC_E,    KC_R,    KC_T,    KC_Y,     KC_U,    KC_I,    KC_O,    KC_P,     KC_LBRC,  KC_RBRC,  KC_BSLS,          KC_DEL,
         KC_LCTL, KC_A,     KC_S,     KC_D,    KC_F,    KC_G,              KC_H,    KC_J,    KC_K,    KC_L,     KC_SCLN,  KC_QUOT,  KC_ENT,           KC_HOME,
         KC_LSFT,           KC_Z,     KC_X,    KC_C,    KC_V,    KC_B,     MO(FN2), KC_N,    KC_M,    KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT, KC_UP,
-        KC_LCTL, KC_LWIN,  KC_LALT,           MO(FN1),          MO(FN2),     MO(FN1),       KC_SPC,            KC_RCTL,            KC_LEFT, KC_DOWN, KC_RGHT),
+        KC_LCTL, KC_LWIN,  KC_LALT,           MO(FN1),          MO(FN2),     MO(FN1),       KC_SPC,         TD(TD_RCTL),           KC_LEFT, KC_DOWN, KC_RGHT),
 
     [WIN_FN1] = LAYOUT_69_ansi(
         KC_GRV,  KC_BRID,  KC_BRIU,  KC_TASK, KC_FILE, RGB_VAD, RGB_VAI,  KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,          RGB_TOG,
